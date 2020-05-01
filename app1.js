@@ -9,10 +9,11 @@ GAME RULES:
 
 */
 
-var  scores, roundScore, activePlayer, gamePlaying, TwoSix;
+var  scores, roundScore, activePlayer, gamePlaying;
 
 init();
 
+var TwoSix;
 // document.querySelector('#current-' + activePlayer).textContent = dice; // setter - set the value of #current
 
 // document.querySelector('#current-' + activePlayer).innerHTML = '<em>' + dice + "<em>"; - this help to work with html code instead of puting text directly like example above
@@ -31,28 +32,30 @@ init();
 document.querySelector('.btn-roll').addEventListener('click', function() {
   if (gamePlaying) {
      // 1. random number
-    var dice = Math.floor(Math.random() * 6) + 1;
+    var dice1 = Math.floor(Math.random() * 6) + 1;
+    var dice2 = Math.floor(Math.random() * 6) + 1;
 
     // 2. Display the result
-    var diceDOM = document.querySelector('.dice');
-    diceDOM.style.display = 'block';
-    diceDOM.src = 'dice-' + dice + '.png';
-    // 3. Update the round score IF the roleed number was NOT a 1.
-    if (dice !== 1) {
+    document.getElementById('dice-1').style.display = 'block';
+    document.getElementById('dice-2').style.display = 'block';
+    document.getElementById('dice-1').src = 'dice-' + dice1 + '.png';
+    document.getElementById('dice-2').src = 'dice-' + dice2 + '.png';
+    // 3. Update the round score IF the roled number was NOT a 1.
+    /* if (dice === 6 && TwoSix === 6) {
+     scores[activePlayer] = 0;
+     document.querySelector('#score-' + activePlayer).textContent = '0';
+     nextPlayer();
+  } else */
+  if (dice1 !== 1 && dice2 !== 1) {
       // add score
-      roundScore += dice;
+      roundScore += dice1 + dice2;
       document.querySelector('#current-' + activePlayer).textContent = roundScore;
 
-    } else if (dice === 6) {
-      TwoSix += dice;
-      if (TwoSix === 12) {
-      nextPlayer();
-    }
-    }
-     else {
+    } else {
       // next player
       nextPlayer();
       }
+     // TwoSix = dice;
  }
 }); // this example is called anonimus function as function execute once and without name, which can only be used here
 
@@ -65,9 +68,19 @@ document.querySelector('.btn-hold').addEventListener('click', function() {
     // update the UI
     document.querySelector('#score-' + activePlayer).textContent = scores[activePlayer];
 
+    var input = document.querySelector('.final-score').value;
+    var winningScore;
+    // Undefined, 0, null, or '' COERCED to false
+    // anything else is COERCED to true
+    if (input) {
+      winningScore = input;
+    } else {
+     winningScore = 100;
+    }
     // Check if player won the game
-    if (scores[activePlayer] >= 100) {
-      document.querySelector('.dice').style.display = 'none';
+    if (scores[activePlayer] >= winningScore) {
+      document.getElementById('dice-1').style.display = 'none';
+      document.getElementById('dice-2').style.display = 'none';
      document.querySelector('#name-' + activePlayer).textContent = 'Winner!';
      document.querySelector('.player-' + activePlayer + '-panel').classList.add('winner');
      document.querySelector('.player-' + activePlayer + '-panel').classList.remove('activer');
@@ -89,7 +102,8 @@ function nextPlayer() {
  document.querySelector('.player-0-panel').classList.toggle('active');
  document.querySelector('.player-1-panel').classList.toggle('active');
 
- document.querySelector('.dice').style.display = 'none';
+ document.getElementById('dice-1').style.display = 'none';
+ document.getElementById('dice-2').style.display = 'none';
 }
 
 
@@ -101,7 +115,8 @@ function init () {
   activePlayer = 0;
   TwoSix = 0;
   gamePlaying = true;
-  document.querySelector('.dice').style.display = 'none'; // set dice to not be displayed at the begginning before taping button
+  document.getElementById('dice-1').style.display = 'none';
+  document.getElementById('dice-2').style.display = 'none'; // set dice to not be displayed at the begginning before taping button
 
   document.getElementById('score-0').textContent = '0';
   document.getElementById('score-1').textContent = '0';
